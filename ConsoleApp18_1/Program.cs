@@ -15,42 +15,59 @@ namespace ConsoleApp3_4
 
         public static void Run()
         {
-            Account<int> account1 = new Account<int>();
-            account1.Write(1, 0.01, "Николас Коппола");
+            Console.WriteLine("Введите строку");
+            string str = Console.ReadLine();
+            
+            Dictionary<char, char> dict = new Dictionary<char, char>();
+            dict.Add('[', ']');
+            dict.Add('{', '}');
+            dict.Add('(', ')');
+            dict.Add('<', '>');
+            dict.Add(']', ' ');
+            dict.Add('}', ' ');
+            dict.Add(')', ' ');
+            dict.Add('>', ' ');
 
-            Account<string> account2 = new Account<string>();
-            account2.Write("Номер 1", 0.02, "Николас Коппола");
+            Stack<char> stack = new Stack<char>();
 
-            account1.Read();
-            account2.Read();
+            for (int i = 0; i < str.Length; i++)
+            {
+                char ch = str[i];
+                if (ch != '[' & ch != ']' & ch != '{' & ch != '}' & ch != '(' & ch != ')' & ch != '<' & ch != '>')
+                {
+                    str = str.Remove(i, 1);
+                    i--;
+                    continue;
+                }
 
+                if (stack.Count == 0 & str.Length > 0)
+                {
+                    stack.Push(dict[str[i]]);
+                    continue;
+                }             
+                    if (str[i] == stack.Peek())
+                    {
+                        
+                    stack.Pop();
+                    }
+                    else if (dict[ch] != str[i])
+                    {
+                        stack.Push(dict[ch]);
+                    }
+            }
+            if (stack.Count > 0)
+            {
+                Console.WriteLine("Скобки расставлены неверно");
+            }
+            else
+            {
+                Console.WriteLine("Скобки расставлены верно");
+            }
+            Console.WriteLine(stack.Count);
             Console.ReadLine();
             Run();
             Environment.Exit(0);
         }
-
-        public class Account<T>
-        {
-            private T Num { get; set; }
-            private double Balance { get; set; }
-            private string Name { get; set; }
-
-            public T Read()
-            {
-                Console.WriteLine("Номер: {0}, Баланс: {1}, Имя: {2}", Num, Balance, Name);
-                return default(T);
-            }
-
-            public T Write(T Num, double Balance, string Name)
-            {
-                this.Num = Num;
-                this.Balance = Balance;
-                this.Name = Name;
-                return default(T);
-            }
-        }
-
-
     }
 }
 
